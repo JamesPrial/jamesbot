@@ -1,0 +1,30 @@
+# JamesBot Configuration Example
+# Copy this file to config.yaml and update with your values
+
+# Discord configuration
+discord:
+  # Bot token from Discord Developer Portal (REQUIRED)
+  # Get yours at: https://discord.com/developers/applications
+  token: ""  # Add your Discord bot token here
+
+  # Guild (server) ID where the bot will register commands
+  # Enable Developer Mode in Discord to copy server IDs
+  guild_id: ""  # Add your guild ID here (optional)
+
+  # Whether to remove registered commands when the bot shuts down
+  # Set to true during development to avoid command clutter
+  cleanup_on_shutdown: false
+
+# Logging configuration
+logging:
+  # Log level: debug, info, warn, error, fatal, panic
+  level: "info"
+
+  # Log format: console (human-readable), json (structured)
+  format: "console"
+
+# Graceful shutdown configuration
+shutdown:
+  # Maximum time to wait for graceful shutdown
+  # Format: duration string (e.g., "10s", "1m", "500ms")
+  timeout: "10s"
