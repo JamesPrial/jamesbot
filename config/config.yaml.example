@@ -1,0 +1,27 @@
+# JamesBot Configuration Example
+# Copy this file to config.yaml and fill in your Discord bot token
+
+discord:
+  # Your Discord bot token (REQUIRED)
+  # Get this from https://discord.com/developers/applications
+  token: "YOUR_BOT_TOKEN_HERE"
+
+  # Guild ID for guild-specific commands (optional)
+  # Leave empty for global commands (slower to register, up to 1 hour)
+  # Set to your Discord server ID for instant registration during development
+  guild_id: ""
+
+  # Whether to clean up slash commands on shutdown
+  # Set to true during development to avoid leaving test commands
+  cleanup_on_shutdown: false
+
+logging:
+  # Log level: debug, info, warn, error, fatal, panic
+  level: "info"
+
+  # Log format: console, json
+  format: "console"
+
+shutdown:
+  # Maximum time to wait for graceful shutdown
+  timeout: "10s"

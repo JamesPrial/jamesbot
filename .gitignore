@@ -1,0 +1,37 @@
+# Binaries
+/cmd/bot/bot
+/jamesbot
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+
+# Coverage files
+*.out
+coverage.txt
+
+# Go workspace file
+go.work
+
+# Configuration files (keep example)
+config/config.yaml
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
