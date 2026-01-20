@@ -111,15 +111,53 @@ go build -o bin/jamesbot ./cmd/bot
 go run ./cmd/bot
 ```
 
+## CLI Commands
+
+JamesBot provides a command-line interface for bot management:
+
+```bash
+# Start the Discord bot
+jamesbot serve
+jamesbot serve -c /path/to/config.yaml
+
+# View bot statistics
+jamesbot stats
+jamesbot stats --json
+
+# Manage moderation rules
+jamesbot rules list
+jamesbot rules list --json
+jamesbot rules set <rule> <key> <value>
+```
+
+### Command Reference
+
+| Command | Description |
+|---------|-------------|
+| `serve` | Start the Discord bot server |
+| `stats` | Display bot statistics (uptime, commands executed, guilds) |
+| `rules list` | List all moderation rules |
+| `rules set` | Modify a rule setting |
+
+### Flags
+
+| Flag | Commands | Description |
+|------|----------|-------------|
+| `-c, --config` | serve | Path to config file |
+| `--json` | stats, rules list | Output as JSON |
+| `--endpoint` | stats, rules | API endpoint (default: http://127.0.0.1:8765) |
+
 ## Project Structure
 
 ```
 jamesbot/
 ├── cmd/bot/main.go              # Entry point, signal handling
 ├── internal/
+│   ├── api/                     # API client for CLI-bot communication
 │   ├── bot/                     # Bot lifecycle management
 │   │   ├── bot.go               # Start/Stop, command registration
 │   │   └── options.go           # Functional options pattern
+│   ├── cli/                     # CLI framework and commands
 │   ├── command/                 # Command framework
 │   │   ├── command.go           # Command interface
 │   │   ├── context.go           # Execution context helpers
@@ -129,6 +167,7 @@ jamesbot/
 │   ├── config/                  # Configuration
 │   │   ├── config.go            # Config structs
 │   │   └── loader.go            # Viper-based loading
+│   ├── control/                 # Control API server
 │   ├── handler/                 # Discord event handlers
 │   │   ├── interaction.go       # Slash command routing
 │   │   └── ready.go             # Bot ready event

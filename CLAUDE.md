@@ -45,6 +45,49 @@ internal/middleware      Composable request pipeline
 pkg/errutil              Custom error types with Unwrap() support
 ```
 
+## CLI Architecture
+
+```
+internal/cli/
+  ├── cli.go           Main entry point, subcommand routing
+  ├── command.go       CLICommand interface definition
+  ├── context.go       Execution context (stdout, stderr, config)
+  ├── errors.go        Exit codes (ExitSuccess=0, ExitUsageError=1, ExitFailure=2)
+  └── commands/
+      ├── serve.go     Starts Discord bot + control API
+      ├── stats.go     Displays bot statistics
+      ├── rules.go     Parent command for rule management
+      ├── rules_list.go
+      └── rules_set.go
+
+internal/control/      Control API (localhost HTTP server)
+  ├── server.go        HTTP server on 127.0.0.1:8765
+  └── types.go         Stats, Rule types
+
+internal/api/          CLI-to-bot communication
+  └── client.go        HTTP client for control API
+```
+
+## CLI Command Interface
+
+```go
+type CLICommand interface {
+    Name() string
+    Synopsis() string
+    Usage() string
+    SetFlags(fs *flag.FlagSet)
+    Run(ctx *Context, args []string) int
+}
+```
+
+## Adding a New CLI Command
+
+1. Create `internal/cli/commands/mycommand.go` implementing CLICommand
+2. Create `internal/cli/commands/mycommand_test.go` with table-driven tests
+3. Add adapter in `internal/cli/cli.go` (see statsCommandAdapter pattern)
+4. Register in `getCommands()` map
+5. Run `make test` to verify
+
 ## Key Patterns
 
 **Command Interface** - All commands implement:

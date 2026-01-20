@@ -5,6 +5,25 @@ All notable changes to JamesBot will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-20
+
+### Added
+- CLI subcommand system using Go stdlib flag package
+- `serve` command - starts Discord bot with control API
+- `stats` command - displays bot statistics (human-readable and JSON output)
+- `rules` command with `list` and `set` subcommands for rule management
+- Control API server on localhost:8765 for CLI-bot communication
+- New packages: `internal/cli`, `internal/api`, `internal/control`
+
+### Changed
+- Refactored `cmd/bot/main.go` to use CLI dispatcher
+- Bot now starts via `jamesbot serve` instead of direct execution
+
+### Technical
+- 95% test coverage on API client
+- 88% test coverage on CLI framework
+- No new external dependencies (stdlib only for CLI)
+
 ## [1.0.0] - 2025-01-19
 
 ### Added

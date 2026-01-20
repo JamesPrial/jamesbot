@@ -10,22 +10,34 @@ import (
 	"github.com/rs/zerolog"
 )
 
+// CommandExecutedCallback is called after a command is successfully executed.
+type CommandExecutedCallback func()
+
 // InteractionHandler handles Discord interaction events.
 // It processes application commands by looking them up in the registry
 // and executing them through the middleware chain.
 type InteractionHandler struct {
-	registry   *command.Registry
-	middleware middleware.Middleware
-	logger     zerolog.Logger
+	registry          *command.Registry
+	middleware        middleware.Middleware
+	logger            zerolog.Logger
+	onCommandExecuted CommandExecutedCallback
 }
 
 // NewInteractionHandler creates a new interaction handler with the provided components.
 // The middleware parameter can be nil if no middleware is needed.
 func NewInteractionHandler(registry *command.Registry, mw middleware.Middleware, logger zerolog.Logger) *InteractionHandler {
 	return &InteractionHandler{
-		registry:   registry,
-		middleware: mw,
-		logger:     logger,
+		registry:          registry,
+		middleware:        mw,
+		logger:            logger,
+		onCommandExecuted: nil,
+	}
+}
+
+// SetCommandExecutedCallback sets a callback to be called after each successful command execution.
+func (h *InteractionHandler) SetCommandExecutedCallback(callback CommandExecutedCallback) {
+	if h != nil {
+		h.onCommandExecuted = callback
 	}
 }
 
@@ -83,6 +95,11 @@ func (h *InteractionHandler) Handle(s *discordgo.Session, i *discordgo.Interacti
 	// Execute the command through the middleware chain
 	if err := handler(ctx); err != nil {
 		h.handleError(ctx, err)
+	} else {
+		// Command executed successfully
+		if h.onCommandExecuted != nil {
+			h.onCommandExecuted()
+		}
 	}
 }
 

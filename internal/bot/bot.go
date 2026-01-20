@@ -4,9 +4,12 @@ package bot
 import (
 	"context"
 	"fmt"
+	"sync/atomic"
+	"time"
 
 	"jamesbot/internal/command"
 	"jamesbot/internal/config"
+	"jamesbot/internal/control"
 	"jamesbot/internal/handler"
 	"jamesbot/internal/middleware"
 
@@ -25,6 +28,10 @@ type Bot struct {
 
 	interactionHandler *handler.InteractionHandler
 	readyHandler       *handler.ReadyHandler
+
+	// Stats tracking
+	startTime        time.Time
+	commandsExecuted int64 // atomic counter
 }
 
 // New creates a new Bot instance with the provided configuration and logger.
@@ -81,6 +88,9 @@ func New(cfg *config.Config, logger zerolog.Logger, opts ...Option) (*Bot, error
 		logger,
 	)
 
+	// Set callback to track command executions
+	bot.interactionHandler.SetCommandExecutedCallback(bot.IncrementCommandsExecuted)
+
 	return bot, nil
 }
 
@@ -106,6 +116,9 @@ func (b *Bot) Start(ctx context.Context) error {
 	if b == nil {
 		return fmt.Errorf("bot cannot be nil")
 	}
+
+	// Record start time
+	b.startTime = time.Now()
 
 	// Add event handlers
 	b.session.AddHandler(b.readyHandler.Handle)
@@ -204,4 +217,55 @@ func (b *Bot) Stop(ctx context.Context) error {
 	b.logger.Info().Msg("bot stopped")
 
 	return nil
+}
+
+// IncrementCommandsExecuted atomically increments the commands executed counter.
+// This method is called by the interaction handler after each command execution.
+func (b *Bot) IncrementCommandsExecuted() {
+	if b == nil {
+		return
+	}
+	atomic.AddInt64(&b.commandsExecuted, 1)
+}
+
+// Stats returns current bot statistics.
+// Implements control.BotInfo interface.
+func (b *Bot) Stats() *control.Stats {
+	if b == nil {
+		return nil
+	}
+
+	uptime := time.Since(b.startTime)
+	guildCount := 0
+	if b.session != nil && b.session.State != nil {
+		guildCount = len(b.session.State.Guilds)
+	}
+
+	return &control.Stats{
+		Uptime:           uptime.String(),
+		StartTime:        b.startTime.Unix(),
+		CommandsExecuted: atomic.LoadInt64(&b.commandsExecuted),
+		GuildCount:       guildCount,
+		ActiveRules:      0, // Rules not implemented yet
+	}
+}
+
+// Rules returns the list of moderation rules.
+// Implements control.BotInfo interface.
+func (b *Bot) Rules() []control.Rule {
+	if b == nil {
+		return nil
+	}
+	// Rules not implemented yet
+	return []control.Rule{}
+}
+
+// SetRule updates a rule configuration.
+// Implements control.BotInfo interface.
+func (b *Bot) SetRule(name, key, value string) error {
+	if b == nil {
+		return fmt.Errorf("bot cannot be nil")
+	}
+	// Rules not implemented yet
+	return fmt.Errorf("rules not implemented")
 }
