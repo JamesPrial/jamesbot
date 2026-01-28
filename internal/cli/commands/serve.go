@@ -17,6 +17,8 @@ import (
 	"jamesbot/internal/config"
 	"jamesbot/internal/control"
 	"jamesbot/internal/middleware"
+	"jamesbot/internal/plugin"
+	"jamesbot/internal/plugin/plugins/jamesprial"
 
 	"github.com/rs/zerolog"
 )
@@ -115,10 +117,28 @@ func (c *ServeCommand) Run(ctx *CLIContext, args []string) int {
 		return 1
 	}
 
-	// Register commands
+	// Register core commands
 	if err := c.registerCommands(b, logger); err != nil {
 		logger.Fatal().Err(err).Msg("failed to register commands")
 		return 1
+	}
+
+	// Load plugins
+	pluginLoader := c.loadPlugins(logger)
+	defer pluginLoader.ShutdownAll()
+
+	// Register plugin commands
+	for _, cmd := range pluginLoader.Commands() {
+		if err := b.RegisterCommand(cmd); err != nil {
+			logger.Warn().
+				Str("command", cmd.Name()).
+				Err(err).
+				Msg("failed to register plugin command")
+		} else {
+			logger.Debug().
+				Str("command", cmd.Name()).
+				Msg("registered plugin command")
+		}
 	}
 
 	// Start bot
@@ -182,4 +202,31 @@ func (c *ServeCommand) registerCommands(b *bot.Bot, logger zerolog.Logger) error
 	}
 
 	return nil
+}
+
+// loadPlugins initializes and loads all plugins.
+func (c *ServeCommand) loadPlugins(logger zerolog.Logger) *plugin.Loader {
+	registry := plugin.NewRegistry(logger)
+	loader := plugin.NewLoader(registry, logger)
+
+	// Load the JamesPrial plugin
+	plugins := []plugin.Plugin{
+		jamesprial.New(),
+	}
+
+	for _, p := range plugins {
+		if err := loader.Load(p); err != nil {
+			logger.Error().
+				Err(err).
+				Str("plugin", p.Name()).
+				Msg("failed to load plugin")
+		} else {
+			logger.Info().
+				Str("plugin", p.Name()).
+				Str("version", p.Version()).
+				Msg("loaded plugin")
+		}
+	}
+
+	return loader
 }
