@@ -1,4 +1,4 @@
-.PHONY: build run test clean fmt
+.PHONY: build run test clean fmt lint
 
 build:
 	go build -o bin/jamesbot ./cmd/bot
@@ -11,6 +11,9 @@ test:
 
 fmt:
 	go fmt ./...
+
+lint:
+	golangci-lint run ./...
 
 clean:
 	rm -rf bin/
