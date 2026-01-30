@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
+
 	"jamesbot/pkg/errutil"
 )
 

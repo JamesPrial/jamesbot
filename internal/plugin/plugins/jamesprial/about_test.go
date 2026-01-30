@@ -22,7 +22,7 @@ func TestAboutPluginCommand_Options(t *testing.T) {
 	cmd := &AboutPluginCommand{}
 	opts := cmd.Options()
 
-	if opts != nil && len(opts) > 0 {
+	if len(opts) > 0 {
 		t.Errorf("Options() should return nil or empty slice, got %d options", len(opts))
 	}
 }

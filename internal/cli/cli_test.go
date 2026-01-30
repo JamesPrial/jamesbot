@@ -441,10 +441,6 @@ func Test_Run_OutputGoesToCorrectWriter(t *testing.T) {
 			if tt.expectStderr {
 				assert.NotEmpty(t, stderr.String(), "expected output on stderr")
 			}
-			if !tt.expectStdout && tt.expectStderr {
-				// For error cases, stdout should typically be empty
-				// (though implementation may vary)
-			}
 		})
 	}
 }

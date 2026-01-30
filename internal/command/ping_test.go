@@ -45,12 +45,6 @@ func createPingTestInteraction(userID, guildID, channelID string) *discordgo.Int
 	}
 }
 
-// mockSession wraps a session with a response recorder for testing.
-type mockPingSession struct {
-	lastResponse *discordgo.InteractionResponse
-	respondErr   error
-}
-
 func Test_PingCommand_Name(t *testing.T) {
 	tests := []struct {
 		name     string

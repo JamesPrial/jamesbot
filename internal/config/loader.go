@@ -32,9 +32,9 @@ func Load(path string) (*Config, error) {
 	v.AutomaticEnv()
 
 	// Explicitly bind environment variables for keys that may not exist in config file
-	v.BindEnv("discord.token", "JAMESBOT_DISCORD_TOKEN")
-	v.BindEnv("logging.level", "JAMESBOT_LOGGING_LEVEL")
-	v.BindEnv("shutdown.timeout", "JAMESBOT_SHUTDOWN_TIMEOUT")
+	_ = v.BindEnv("discord.token", "JAMESBOT_DISCORD_TOKEN")
+	_ = v.BindEnv("logging.level", "JAMESBOT_LOGGING_LEVEL")
+	_ = v.BindEnv("shutdown.timeout", "JAMESBOT_SHUTDOWN_TIMEOUT")
 
 	// Load configuration file if path is provided
 	if path != "" {

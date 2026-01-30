@@ -94,13 +94,6 @@ func configWithEmptyToken() *config.Config {
 	return cfg
 }
 
-// configWithWhitespaceToken creates a config with whitespace-only token.
-func configWithWhitespaceToken() *config.Config {
-	cfg := validConfig()
-	cfg.Discord.Token = "   "
-	return cfg
-}
-
 // trackingMiddleware creates a middleware that tracks execution for testing.
 func trackingMiddleware(name string, tracker *[]string, mu *sync.Mutex) middleware.Middleware {
 	return func(next middleware.HandlerFunc) middleware.HandlerFunc {

@@ -3,8 +3,9 @@ package command
 import (
 	"fmt"
 
-	"github.com/bwmarrin/discordgo"
 	"jamesbot/pkg/errutil"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 // KickCommand implements a command to kick members from the server.

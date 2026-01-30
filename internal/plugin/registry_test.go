@@ -85,9 +85,9 @@ func TestRegistry_Get(t *testing.T) {
 	_ = r.Register(p)
 
 	tests := []struct {
-		name      string
+		name       string
 		pluginName string
-		wantFound bool
+		wantFound  bool
 	}{
 		{
 			name:       "get existing plugin",

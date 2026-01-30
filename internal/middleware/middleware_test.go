@@ -70,12 +70,6 @@ func (t *executionTracker) getOrder() []string {
 	return result
 }
 
-func (t *executionTracker) setError(name string, err error) {
-	t.mu.Lock()
-	defer t.mu.Unlock()
-	t.errors[name] = err
-}
-
 func (t *executionTracker) getError(name string) error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
@@ -739,16 +733,16 @@ func Test_Chain_Immutability(t *testing.T) {
 
 	// Use with different handlers
 	chained1 := chainFunc(handler1)
-	chained2 := chainFunc(handler2)
+	_ = chainFunc(handler2) // verify chainFunc can be reused
 
 	// Execute both
 	_ = chained1(createTestContext())
 
 	// Reset tracker for second execution
-	tracker1 = newExecutionTracker()
+	_ = newExecutionTracker() // create fresh tracker
 	mw2 := createTrackingMiddleware("mw", tracker2)
 	chainFunc2 := middleware.Chain(mw2)
-	chained2 = chainFunc2(handler2)
+	chained2 := chainFunc2(handler2)
 	_ = chained2(createTestContext())
 
 	// Verify they executed independently
@@ -863,7 +857,7 @@ func Test_Chain_MultipleChainCalls(t *testing.T) {
 
 	// Create two different chains
 	chain1 := middleware.Chain(createTrackingMiddleware("A", tracker))
-	chain2 := middleware.Chain(createTrackingMiddleware("B", tracker))
+	_ = middleware.Chain(createTrackingMiddleware("B", tracker)) // verify multiple chains can be created
 
 	// Use chain1
 	chained1 := chain1(handler)
@@ -874,7 +868,7 @@ func Test_Chain_MultipleChainCalls(t *testing.T) {
 	tracker = newExecutionTracker()
 
 	// Create fresh middleware for chain2 with new tracker
-	chain2 = middleware.Chain(createTrackingMiddleware("B", tracker))
+	chain2 := middleware.Chain(createTrackingMiddleware("B", tracker))
 	chained2 := chain2(func(ctx *command.Context) error {
 		tracker.record("handler2")
 		return nil

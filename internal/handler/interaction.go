@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+
 	"jamesbot/internal/command"
 	"jamesbot/internal/middleware"
 	"jamesbot/pkg/errutil"

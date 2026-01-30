@@ -3,8 +3,9 @@ package command
 import (
 	"fmt"
 
-	"github.com/bwmarrin/discordgo"
 	"jamesbot/pkg/errutil"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 // EchoCommand repeats the user's input back to them.

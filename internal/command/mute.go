@@ -5,8 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bwmarrin/discordgo"
 	"jamesbot/pkg/errutil"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 // MuteCommand implements a command to timeout/mute members in the server.

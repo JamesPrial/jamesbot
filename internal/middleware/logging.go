@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"jamesbot/internal/command"
 	"time"
+
+	"jamesbot/internal/command"
 
 	"github.com/rs/zerolog"
 )

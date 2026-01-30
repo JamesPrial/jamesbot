@@ -43,7 +43,7 @@ func (m *mockEventPlugin) EventHandlers() []interface{} {
 // mockInitializablePlugin requires initialization.
 type mockInitializablePlugin struct {
 	mockPlugin
-	initError error
+	initError  error
 	initCalled bool
 }
 
@@ -55,7 +55,7 @@ func (m *mockInitializablePlugin) Init(ctx *InitContext) error {
 // mockShutdownablePlugin requires shutdown.
 type mockShutdownablePlugin struct {
 	mockPlugin
-	shutdownError error
+	shutdownError  error
 	shutdownCalled bool
 }
 
@@ -69,10 +69,10 @@ type mockCommand struct {
 	name string
 }
 
-func (m *mockCommand) Name() string                                           { return m.name }
-func (m *mockCommand) Description() string                                    { return "test" }
-func (m *mockCommand) Options() []*discordgo.ApplicationCommandOption         { return nil }
-func (m *mockCommand) Execute(ctx *command.Context) error                     { return nil }
+func (m *mockCommand) Name() string                                   { return m.name }
+func (m *mockCommand) Description() string                            { return "test" }
+func (m *mockCommand) Options() []*discordgo.ApplicationCommandOption { return nil }
+func (m *mockCommand) Execute(ctx *command.Context) error             { return nil }
 
 func TestLoader_Load(t *testing.T) {
 	tests := []struct {

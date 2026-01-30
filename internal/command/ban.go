@@ -3,8 +3,9 @@ package command
 import (
 	"fmt"
 
-	"github.com/bwmarrin/discordgo"
 	"jamesbot/pkg/errutil"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 // BanCommand implements a command to ban members from the server.
